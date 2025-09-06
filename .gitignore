@@ -1,0 +1,55 @@
+# === Sistema / IDE ===
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+.vscode/
+out/
+
+# === Logs ===
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === Variáveis de ambiente ===
+.env
+.env.*
+!.env.example
+front/.env
+front/.env.*
+!front/.env.example
+back/.env
+back/.env.*
+!back/.env.example
+
+# =========================
+# BACK (Java / Spring + Maven)
+# =========================
+back/target/
+# Não ignore o wrapper do Maven:
+# mvnw, mvnw.cmd e a pasta .mvn/ DEVEM ser versionados
+hs_err_pid*
+replay_pid*
+
+# =========================
+# FRONT (Vite/React)
+# =========================
+front/node_modules/
+front/dist/
+front/.vite/
+front/.cache/
+front/.turbo/
+front/.parcel-cache/
+
+# Testes/coverage/cypress
+coverage/
+front/coverage/
+front/cypress/videos/
+front/cypress/screenshots/
+
+# Linters/formatters caches
+front/.eslintcache
+front/.stylelintcache
