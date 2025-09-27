@@ -14,7 +14,7 @@ html, body, #root {
 }
 body {
   margin: 0;
-  font-family: var(--app-font);
+  font-family: var(--app-font), monospace;
   color: var(--app-fg);
   background: var(--app-bg);
 }
