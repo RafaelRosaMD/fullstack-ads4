@@ -25,7 +25,6 @@ public class Usuario implements UserDetails {
     private String cpf;
     private String senha;
     private String email;
-
     private String role;
 
     @Override
