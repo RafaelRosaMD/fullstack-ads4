@@ -3,7 +3,6 @@ package com.senac.full.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.senac.full.dto.LoginRequestDto;
 import com.senac.full.model.Token;
 import com.senac.full.model.Usuario;
@@ -75,8 +74,5 @@ public class TokenService {
         return dataAtual.toInstant(ZoneOffset.of( "-03:00"));
 
     }
-
-
-
 
 }

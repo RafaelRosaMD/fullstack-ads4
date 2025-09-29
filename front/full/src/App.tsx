@@ -2,6 +2,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import LoginPage from "./pages/LoginPage";
+import Teste from "./components/Teste";
+
 
 function OrdensPage() {
   return (
@@ -14,6 +16,7 @@ function OrdensPage() {
   );
 }
 
+
 export default function App() {
   return (
     <div className="app-shell">
@@ -22,6 +25,7 @@ export default function App() {
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/ordens" element={<OrdensPage />} />
+        <Route path="/teste" element={<Teste />} />
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
       <Footer />

@@ -1,6 +1,5 @@
 package com.senac.full.config;
 
-import com.senac.full.model.Usuario;
 import com.senac.full.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Collections;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -21,12 +19,10 @@ public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private TokenService tokenService;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String path = request.getRequestURI();
-
 
         try {
             if (path.equals("/auth/login")
@@ -58,15 +54,10 @@ public class JwtFilter extends OncePerRequestFilter {
             }else {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Token não informado");
-                return;
             }
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Token não informado");
-            return;
-
         }
-
-
     }
 }

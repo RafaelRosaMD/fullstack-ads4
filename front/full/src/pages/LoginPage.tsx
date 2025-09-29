@@ -30,13 +30,11 @@ function LoginPage() {
       <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "70vh" }}>
         <div className="login-card w-100">
           <h1 className="h4 mb-3 text-center">Acessar conta</h1>
-          <p className="text-muted text-center mb-4" style={{ fontSize: 14 }}>
-            Minimalista, focado no essencial.
-          </p>
+
 
           <form onSubmit={handleSubmit} noValidate>
             <div className="mb-3">
-              <label htmlFor="email" className="form-label">E-mail</label>
+              <label htmlFor="email" className="form-label" style={{ marginLeft: "12px" }}>E-mail</label>
               <input
                 id="email"
                 type="email"
@@ -46,15 +44,12 @@ function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                aria-describedby="emailHelp"
               />
-              <div id="emailHelp" className="form-text text-muted">
-                Usaremos este e-mail para autenticar você.
-              </div>
+            
             </div>
 
             <div className="mb-3">
-              <label htmlFor="senha" className="form-label">Senha</label>
+              <label htmlFor="senha" className="form-label" style={{ marginLeft: "12px" }}>Senha</label>
               <input
                 id="senha"
                 type="password"
