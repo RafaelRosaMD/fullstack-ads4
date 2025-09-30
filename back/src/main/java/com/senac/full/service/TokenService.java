@@ -3,7 +3,6 @@ package com.senac.full.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.senac.full.dto.LoginRequestDto;
 import com.senac.full.model.Token;
 import com.senac.full.model.Usuario;
 import com.senac.full.repository.TokenRepository;
@@ -19,10 +18,11 @@ import java.time.ZoneOffset;
 @Service
 public class TokenService {
 
-    @Value("${spring.secretkey}")
+
+    @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${spring.tempo_de_expiracao}")
+    @Value("${jwt.expiration}")
     private int tempo;
 
     private String emissor = "DEVTEST";
@@ -34,9 +34,10 @@ public class TokenService {
     private UsuarioRepository usuarioRepository;
 
 
-    public String gerarToken(LoginRequestDto loginRequestDto) {
+    public String gerarToken(String email) {
 
-        var usuario = usuarioRepository.findByEmail(loginRequestDto.email()).orElse(null);
+        //var usuario = usuarioRepository.findByEmail(loginRequestDto.email()).orElse(null);
+        var usuario = usuarioRepository.findByEmail(email).orElse(null);
 
         Algorithm algorithm = Algorithm.HMAC256(secret);
 
