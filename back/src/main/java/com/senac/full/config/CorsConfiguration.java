@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Tag(name = "JWT Filter", description = "Entidade responsável pela implementação das regras de controle de CORS e requisições externas.")
+@Tag(name = "Configuração de Cors", description = "Classe para configuração de CORS e controle de permissão de requisições externas")
 @Configuration
 public class CorsConfiguration {
 
