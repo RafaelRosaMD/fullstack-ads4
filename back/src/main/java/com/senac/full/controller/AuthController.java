@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @Tag(name = "Autenticação Controller", description = "Controller responsável pela autenticação")
-// @CrossOrigin(origins = "http://localhost:5173") // use apenas se não configurar CORS global
 public class AuthController {
 
     @Autowired

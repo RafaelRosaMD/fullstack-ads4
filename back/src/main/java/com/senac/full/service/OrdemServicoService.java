@@ -34,11 +34,13 @@ public class OrdemServicoService {
 
     @Transactional(readOnly = true)
     public List<OrdemServicoResponseDto> listar() {
+
         return repo.findAll().stream().map(this::toResponse).toList();
     }
 
     @Transactional(readOnly = true)
     public OrdemServicoResponseDto buscar(Long id) {
+
         return toResponse(getOrThrow(id));
     }
 

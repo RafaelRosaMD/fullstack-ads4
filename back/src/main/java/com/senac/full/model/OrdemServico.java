@@ -13,7 +13,7 @@ public class OrdemServico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)        // nome do cliente
+    @Column(nullable = false)
     private String cliente;
 
     @Column(nullable = false, length = 1000)
