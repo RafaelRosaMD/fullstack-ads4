@@ -5,7 +5,7 @@ function Header() {
     <header className="border-bottom bg-white">
       <nav className="navbar navbar-expand-sm container">
         <Link to="/" className="navbar-brand fw-bold" style={{ letterSpacing: 0.3 }}>
-          MinhaApp
+          Sistema OS
         </Link>
 
         <button
