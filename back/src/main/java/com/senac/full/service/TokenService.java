@@ -18,14 +18,14 @@ import java.time.ZoneOffset;
 @Service
 public class TokenService {
 
-
     @Value("${jwt.secret}")
     private String secret;
 
-    @Value("${jwt.expiration}")
-    private int tempo;
+    @Value("${jwt.expiration}") // minutos
+    private int tempoEmMinutos;
 
-    private String emissor = "DEVTEST";
+    @Value("${jwt.issuer}")
+    private String emissor;
 
     @Autowired
     private TokenRepository tokenRepository;
@@ -33,20 +33,19 @@ public class TokenService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-
     public String gerarToken(String email) {
-
-        //var usuario = usuarioRepository.findByEmail(loginRequestDto.email()).orElse(null);
-        var usuario = usuarioRepository.findByEmail(email).orElse(null);
+        var usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
 
         Algorithm algorithm = Algorithm.HMAC256(secret);
 
         String token = JWT.create()
                 .withIssuer(emissor)
                 .withSubject(usuario.getEmail())
-                .withExpiresAt(this.gerarDataExpiracao())
+                .withExpiresAt(gerarDataExpiracao())
                 .sign(algorithm);
 
+        // COM ESTADO (opcional): mantém lista de tokens válidos
         tokenRepository.save(new Token(null, token, usuario));
 
         return token;
@@ -55,25 +54,27 @@ public class TokenService {
     public Usuario validarToken(String token){
         Algorithm algorithm = Algorithm.HMAC256(secret);
         JWTVerifier verifier = JWT.require(algorithm)
-                .withIssuer(emissor)
+                .withIssuer(emissor)      // agora vindo do properties
                 .build();
-        verifier.verify(token);
 
-        var tokenResult = tokenRepository.findByToken(token).orElse(null);
-        if (tokenResult == null) {
-            throw new IllegalArgumentException("Token Invalido");
-        }
+        var claims = verifier.verify(token).getClaims();
+        var email = claims.get("sub").asString();
 
-        return tokenResult.getUsuario();
+        // 🔴 COMENTE este bloco de checagem no banco por enquanto:
+//    var tokenResult = tokenRepository.findByToken(token).orElse(null);
+//    if (tokenResult == null) {
+//        throw new IllegalArgumentException("Token inválido (não encontrado no repositório).");
+//    }
+//    return tokenResult.getUsuario();
+
+        // ✅ Retorna usuário pelo subject (stateless)
+        return usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
     }
 
     private Instant gerarDataExpiracao(){
-
-        var dataAtual = LocalDateTime.now();
-        dataAtual = dataAtual.plusMinutes(tempo);
-
-        return dataAtual.toInstant(ZoneOffset.of( "-03:00"));
-
+        return LocalDateTime.now()
+                .plusMinutes(tempoEmMinutos)
+                .toInstant(ZoneOffset.of("-03:00"));
     }
-
 }
