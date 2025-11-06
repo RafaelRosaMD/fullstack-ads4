@@ -93,7 +93,10 @@ public class OrdemServicoService {
 
     private OrdemServicoResponseDto toResponse(OrdemServico os) {
         return new OrdemServicoResponseDto(
-                os.getId(), os.getCliente(), os.getDescricaoDefeito(), os.getStatus()
+                os.getId(),
+                os.getCliente(),
+                os.getDescricaoDefeito(),
+                os.getStatus()
         );
     }
 }

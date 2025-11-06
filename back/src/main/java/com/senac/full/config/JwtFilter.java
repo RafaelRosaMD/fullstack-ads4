@@ -57,9 +57,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 var usuario = tokenService.validarToken(token);
 
                 var autorizacao = new UsernamePasswordAuthenticationToken(
-                        usuario.getEmail(),
+                        usuario,
                         null,
-                        usuario.getAuthorities()
+                        usuario.autorizacao()
                 );
 
                 SecurityContextHolder.getContext().setAuthentication(autorizacao);

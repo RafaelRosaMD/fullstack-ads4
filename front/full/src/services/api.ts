@@ -32,3 +32,5 @@ export async function login({ email, senha }: LoginPayload): Promise<string> {
 }
 
 export default api;
+
+// aqui tenho que junta a api usando a validacao pelo redux e nao local storage como está, berenice vai mandar

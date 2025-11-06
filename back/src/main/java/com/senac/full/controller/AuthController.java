@@ -2,6 +2,7 @@ package com.senac.full.controller;
 
 import com.senac.full.dto.LoginRequestDto;
 import com.senac.full.dto.TokenResponseDto;
+import com.senac.full.dto.UsuarioPrincipalDto;
 import com.senac.full.service.TokenService;
 import com.senac.full.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,11 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-// import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -40,4 +38,15 @@ public class AuthController {
         // Responde { "token": "..." }
         return ResponseEntity.ok(new TokenResponseDto(jwt));
     }
+
+    @GetMapping("/recuperarsenha/envio")
+    @Operation(summary = "recuperar senha", description = "método de envio de email")
+    public ResponseEntity<?> recuperarSenhaEnvio(@AuthenticationPrincipal UsuarioPrincipalDto usuarioLogado){
+
+        usuarioService.recuperarSenha
+
+
+
+    }
+
 }
