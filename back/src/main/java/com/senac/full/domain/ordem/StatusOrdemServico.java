@@ -1,4 +1,4 @@
-package com.senac.full.model;
+package com.senac.full.domain.ordem;
 
 public enum StatusOrdemServico {
     ABERTA,

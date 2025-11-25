@@ -1,8 +1,8 @@
-package com.senac.full.dto.ordem;
+package com.senac.full.presentation.ordem;
 
 import jakarta.validation.constraints.NotBlank;
 
-public record OrdemServicoCreateDto(
+public record OrdemServicoUpdateRequest(
         @NotBlank String cliente,
         @NotBlank String descricaoDefeito
 ) { }

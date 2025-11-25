@@ -39,14 +39,6 @@ public class AuthController {
         return ResponseEntity.ok(new TokenResponseDto(jwt));
     }
 
-    @GetMapping("/recuperarsenha/envio")
-    @Operation(summary = "recuperar senha", description = "método de envio de email")
-    public ResponseEntity<?> recuperarSenhaEnvio(@AuthenticationPrincipal UsuarioPrincipalDto usuarioLogado){
 
-        usuarioService.recuperarSenha
-
-
-
-    }
 
 }
