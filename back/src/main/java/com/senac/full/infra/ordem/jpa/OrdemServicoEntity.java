@@ -1,7 +1,9 @@
+
 package com.senac.full.infra.ordem.jpa;
 
 import com.senac.full.domain.ordem.OrdemServico;
 import com.senac.full.domain.ordem.StatusOrdemServico;
+import com.senac.full.infra.usuario.jpa.UsuarioEntity;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,45 +14,57 @@ public class OrdemServicoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String cliente;
 
-    @Column(nullable = false, length = 1000)
+    @Column(length = 1000)
     private String descricaoDefeito;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
     private StatusOrdemServico status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private UsuarioEntity usuario;   // <-- ManyToOne aqui
 
     public OrdemServicoEntity() {
     }
 
-    public OrdemServicoEntity(Long id, String cliente, String descricaoDefeito, StatusOrdemServico status) {
-        this.id = id;
-        this.cliente = cliente;
-        this.descricaoDefeito = descricaoDefeito;
-        this.status = status;
-    }
+    // construtor opcional se quiser
+
+    // ========= MAPEAMENTO DOMAIN ↔ ENTITY =========
 
     public static OrdemServicoEntity fromDomain(OrdemServico os) {
-        return new OrdemServicoEntity(
-                os.getId(),
-                os.getCliente(),
-                os.getDescricaoDefeito(),
-                os.getStatus()
-        );
+        OrdemServicoEntity e = new OrdemServicoEntity();
+        e.id = os.getId();
+        e.cliente = os.getCliente();
+        e.descricaoDefeito = os.getDescricaoDefeito();
+        e.status = os.getStatus();
+
+        // criamos um "proxy" de UsuarioEntity só com o id preenchido
+        if (os.getUsuarioId() != null) {
+            UsuarioEntity u = new UsuarioEntity();
+            u.setId(os.getUsuarioId());
+            e.usuario = u;
+        } else {
+            e.usuario = null;
+        }
+
+        return e;
     }
 
     public OrdemServico toDomain() {
+        Long usuarioId = (usuario != null ? usuario.getId() : null);
+
         return new OrdemServico(
                 this.id,
                 this.cliente,
                 this.descricaoDefeito,
-                this.status
+                this.status,
+                usuarioId
         );
     }
 
-    // getters e setters do JPA
+    // ========= GETTERS / SETTERS =========
 
     public Long getId() {
         return id;
@@ -68,6 +82,10 @@ public class OrdemServicoEntity {
         return status;
     }
 
+    public UsuarioEntity getUsuario() {
+        return usuario;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -82,5 +100,9 @@ public class OrdemServicoEntity {
 
     public void setStatus(StatusOrdemServico status) {
         this.status = status;
+    }
+
+    public void setUsuario(UsuarioEntity usuario) {
+        this.usuario = usuario;
     }
 }

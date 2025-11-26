@@ -29,7 +29,8 @@ public class OrdemServicoController {
     public ResponseEntity<OrdemServicoResponse> criar(@RequestBody @Valid OrdemServicoCreateRequest request) {
         var command = new CriarOrdemServicoCommand(
                 request.cliente(),
-                request.descricaoDefeito()
+                request.descricaoDefeito(),
+                request.usuarioId()
         );
         var os = useCase.criar(command);
         var resp = OrdemServicoResponse.fromDomain(os);
@@ -47,7 +48,7 @@ public class OrdemServicoController {
     @GetMapping("/{id}")
     @Operation(summary = "Buscar OS por id")
     public OrdemServicoResponse buscar(@PathVariable Long id) {
-        var os = useCase.buscar(id);
+        var os = useCase.buscarPorId(id);
         return OrdemServicoResponse.fromDomain(os);
     }
 
