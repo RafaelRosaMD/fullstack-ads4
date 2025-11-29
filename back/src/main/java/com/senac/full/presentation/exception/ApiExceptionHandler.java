@@ -1,5 +1,7 @@
-package com.senac.full.exception;
+package com.senac.full.presentation.exception;
 
+import com.senac.full.exception.BusinessException;
+import com.senac.full.exception.NotFoundException;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
