@@ -5,19 +5,38 @@ import { buscarOrdem, criarOrdem, atualizarOrdem } from "../services/ordens";
 import type { OrdemCreate, OrdemUpdate } from "../types";
 
 export default function OrdemForm() {
-  const { id } = useParams();                  // string | undefined
+  const { id } = useParams();               // string | undefined
   const editMode = Boolean(id);
   const navigate = useNavigate();
 
-  // Como os campos são os mesmos, usamos um shape comum
-  type FormState = { cliente: string; descricaoDefeito: string };
+  type FormState = {
+    cliente: string;
+    descricaoDefeito: string;
+    usuarioId: number | null;
+  };
 
   const [form, setForm] = useState<FormState>({
     cliente: "",
     descricaoDefeito: "",
+    usuarioId: null, // vamos preencher assim que carregar
   });
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+
+  // ===================== carrega usuarioId do localStorage =====================
+  useEffect(() => {
+    const raw = localStorage.getItem("usuarioId");
+    const parsed = raw ? Number(raw) : NaN;
+
+    if (!raw || Number.isNaN(parsed)) {
+      console.warn("usuarioId ausente ou inválido no localStorage.");
+      setErro("Usuário não identificado. Faça login novamente.");
+      return;
+    }
+
+    setForm(prev => ({ ...prev, usuarioId: parsed }));
+  }, []);
+  // ============================================================================
 
   useEffect(() => {
     async function carregar() {
@@ -25,7 +44,13 @@ export default function OrdemForm() {
       try {
         setLoading(true);
         const os = await buscarOrdem(Number(id));
-        setForm({ cliente: os.cliente, descricaoDefeito: os.descricaoDefeito });
+        setForm(prev => ({
+          ...prev,
+          cliente: os.cliente,
+          descricaoDefeito: os.descricaoDefeito,
+          // se o backend devolver usuarioId e você quiser sincronizar:
+          // usuarioId: os.usuarioId ?? prev.usuarioId,
+        }));
       } catch (err: any) {
         setErro(err?.response?.data?.message || "Falha ao carregar OS.");
       } finally {
@@ -43,13 +68,28 @@ export default function OrdemForm() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErro(null);
+
+    if (form.usuarioId == null) {
+      setErro("Usuário não identificado. Faça login novamente.");
+      return;
+    }
+
     setLoading(true);
+
     try {
       if (editMode && id) {
-        const payload: OrdemUpdate = { ...form };
+        const payload: OrdemUpdate = {
+          cliente: form.cliente,
+          descricaoDefeito: form.descricaoDefeito,
+          usuarioId: form.usuarioId,
+        };
         await atualizarOrdem(Number(id), payload);
       } else {
-        const payload: OrdemCreate = { ...form };
+        const payload: OrdemCreate = {
+          cliente: form.cliente,
+          descricaoDefeito: form.descricaoDefeito,
+          usuarioId: form.usuarioId,
+        };
         await criarOrdem(payload);
       }
       navigate("/ordens");
@@ -97,7 +137,12 @@ export default function OrdemForm() {
             <button className="btn btn-dark" type="submit" disabled={loading}>
               {loading ? "Salvando..." : "Salvar"}
             </button>
-            <button className="btn btn-outline-secondary" type="button" onClick={() => navigate("/ordens")} disabled={loading}>
+            <button
+              className="btn btn-outline-secondary"
+              type="button"
+              onClick={() => navigate("/ordens")}
+              disabled={loading}
+            >
               Cancelar
             </button>
           </div>

@@ -7,12 +7,14 @@ export interface OrdemServico {
   status: StatusOrdemServico;
 }
 
-export interface OrdemCreate {
+export type OrdemCreate = {
   cliente: string;
   descricaoDefeito: string;
+  usuarioId: number;   // <- NOVO
 }
 
-export interface OrdemUpdate {
+export type OrdemUpdate = {
   cliente: string;
   descricaoDefeito: string;
+  usuarioId: number;   // <- se o backend também exige no update, deixa aqui
 }
