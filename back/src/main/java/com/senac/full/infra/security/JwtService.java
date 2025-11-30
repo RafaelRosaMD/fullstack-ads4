@@ -1,4 +1,3 @@
-// src/main/java/com/senac/full/infra/security/JwtService.java
 package com.senac.full.infra.security;
 
 import com.senac.full.domain.usuario.Usuario;

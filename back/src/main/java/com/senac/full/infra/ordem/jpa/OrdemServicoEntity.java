@@ -29,10 +29,6 @@ public class OrdemServicoEntity {
     public OrdemServicoEntity() {
     }
 
-    // construtor opcional se quiser
-
-    // ========= MAPEAMENTO DOMAIN ↔ ENTITY =========
-
     public static OrdemServicoEntity fromDomain(OrdemServico os) {
         OrdemServicoEntity e = new OrdemServicoEntity();
         e.id = os.getId();
@@ -40,7 +36,6 @@ public class OrdemServicoEntity {
         e.descricaoDefeito = os.getDescricaoDefeito();
         e.status = os.getStatus();
 
-        // criamos um "proxy" de UsuarioEntity só com o id preenchido
         if (os.getUsuarioId() != null) {
             UsuarioEntity u = new UsuarioEntity();
             u.setId(os.getUsuarioId());
@@ -64,7 +59,6 @@ public class OrdemServicoEntity {
         );
     }
 
-    // ========= GETTERS / SETTERS =========
 
     public Long getId() {
         return id;

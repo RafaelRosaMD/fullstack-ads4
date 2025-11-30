@@ -5,34 +5,38 @@ import { buscarOrdem, criarOrdem, atualizarOrdem } from "../services/ordens";
 import type { OrdemCreate, OrdemUpdate } from "../types";
 
 export default function OrdemForm() {
-  const { id } = useParams();
+  const { id } = useParams();               // string | undefined
   const editMode = Boolean(id);
   const navigate = useNavigate();
 
-    function getUsuarioIdLogado(): number {
-    const raw = localStorage.getItem("usuarioId");
-    if (!raw) {
-      // fallback provisório
-      return 1;
-    }
-    return Number(raw);
-  }
-
-  // AGORA o form também carrega usuarioId
-  type FormState = { 
-    cliente: string; 
+  type FormState = {
+    cliente: string;
     descricaoDefeito: string;
-    usuarioId: number;
+    usuarioId: number | null;
   };
 
-  const [form, setForm] = useState<FormState>(() => ({
+  const [form, setForm] = useState<FormState>({
     cliente: "",
     descricaoDefeito: "",
-    usuarioId: getUsuarioIdLogado(), // pega do storage (ou valor fixo)
-  }));
-
+    usuarioId: null, // vamos preencher assim que carregar
+  });
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
+
+  // ===================== carrega usuarioId do localStorage =====================
+  useEffect(() => {
+    const raw = localStorage.getItem("usuarioId");
+    const parsed = raw ? Number(raw) : NaN;
+
+    if (!raw || Number.isNaN(parsed)) {
+      console.warn("usuarioId ausente ou inválido no localStorage.");
+      setErro("Usuário não identificado. Faça login novamente.");
+      return;
+    }
+
+    setForm(prev => ({ ...prev, usuarioId: parsed }));
+  }, []);
+  // ============================================================================
 
   useEffect(() => {
     async function carregar() {
@@ -44,7 +48,7 @@ export default function OrdemForm() {
           ...prev,
           cliente: os.cliente,
           descricaoDefeito: os.descricaoDefeito,
-          // se a API de GET já devolve usuarioId e você quiser atualizar também:
+          // se o backend devolver usuarioId e você quiser sincronizar:
           // usuarioId: os.usuarioId ?? prev.usuarioId,
         }));
       } catch (err: any) {
@@ -64,13 +68,28 @@ export default function OrdemForm() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErro(null);
+
+    if (form.usuarioId == null) {
+      setErro("Usuário não identificado. Faça login novamente.");
+      return;
+    }
+
     setLoading(true);
+
     try {
       if (editMode && id) {
-        const payload: OrdemUpdate = { ...form };   // inclui usuarioId
+        const payload: OrdemUpdate = {
+          cliente: form.cliente,
+          descricaoDefeito: form.descricaoDefeito,
+          usuarioId: form.usuarioId,
+        };
         await atualizarOrdem(Number(id), payload);
       } else {
-        const payload: OrdemCreate = { ...form };   // inclui usuarioId
+        const payload: OrdemCreate = {
+          cliente: form.cliente,
+          descricaoDefeito: form.descricaoDefeito,
+          usuarioId: form.usuarioId,
+        };
         await criarOrdem(payload);
       }
       navigate("/ordens");
@@ -113,8 +132,6 @@ export default function OrdemForm() {
               required
             />
           </div>
-
-          {/* usuarioId NÃO precisa aparecer na tela, vai “escondido” no payload */}
 
           <div className="d-flex gap-2">
             <button className="btn btn-dark" type="submit" disabled={loading}>

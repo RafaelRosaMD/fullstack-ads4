@@ -1,4 +1,3 @@
-// src/main/java/com/senac/full/infra/security/JwtFilter.java
 package com.senac.full.infra.security;
 
 import jakarta.servlet.FilterChain;

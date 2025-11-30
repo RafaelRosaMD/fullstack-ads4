@@ -1,4 +1,3 @@
-// src/main/java/com/senac/full/application/usuario/AutenticarUsuarioUseCase.java
 package com.senac.full.application.usuario;
 
 import com.senac.full.domain.usuario.Usuario;
@@ -20,7 +19,7 @@ public class AutenticarUsuarioUseCase {
         var usuario = usuarioRepository.buscarPorEmail(email)
                 .orElseThrow(() -> new BusinessException("Usuário não encontrado."));
 
-        // 🔥 AQUI: senha em texto puro
+
         if (!usuario.getSenha().equals(senha)) {
             throw new BusinessException("Senha inválida.");
         }
