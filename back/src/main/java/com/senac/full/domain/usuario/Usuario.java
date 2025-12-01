@@ -6,7 +6,7 @@ public class Usuario {
     private String nome;
     private String cpf;
     private String email;
-    private String senha; // já vem criptografada (hash) na maior parte dos casos
+    private String senha;
     private String role;  // "ROLE_USER", "ROLE_ADMIN"
 
     public Usuario(Long id, String nome, String cpf, String email, String senha, String role) {

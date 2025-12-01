@@ -33,10 +33,8 @@ public class UsuarioController {
                 request.senha(),
                 request.role()
         );
-
         var usuario = useCase.criar(command);
         var response = UsuarioMapper.toResponse(usuario);
-
         return ResponseEntity
                 .created(URI.create("/usuarios/" + response.id()))
                 .body(response);
