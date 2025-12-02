@@ -11,5 +11,10 @@ public interface OrdemServicoRepository {
 
     List<OrdemServico> listar();
 
+    // ---- Multiusuário ----
+    List<OrdemServico> listarPorUsuario(Long usuarioId);
+
+    Optional<OrdemServico> buscarPorIdEUsuario(Long id, Long usuarioId);
+
     void excluir(OrdemServico ordem);
 }

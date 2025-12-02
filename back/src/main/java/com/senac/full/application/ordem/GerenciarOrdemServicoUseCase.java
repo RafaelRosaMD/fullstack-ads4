@@ -41,20 +41,19 @@ public class GerenciarOrdemServicoUseCase {
     }
 
     @Transactional(readOnly = true)
-    public List<OrdemServico> listar() {
-        return ordemRepository.listar();
+    public List<OrdemServico> listarDoUsuario(Long usuarioId) {
+        return ordemRepository.listarPorUsuario(usuarioId);
     }
 
     @Transactional(readOnly = true)
-    public OrdemServico buscarPorId(Long id) {
-        return ordemRepository.buscarPorId(id)
-                .orElseThrow(() -> new NotFoundException("Ordem de Serviço não encontrada."));
+    public OrdemServico buscarDoUsuario(Long id, Long usuarioId) {
+        return ordemRepository.buscarPorIdEUsuario(id, usuarioId)
+                .orElseThrow(() -> new NotFoundException("Ordem de Serviço não encontrada para este usuário."));
     }
 
     @Transactional
-    public OrdemServico atualizar(Long id, AtualizarOrdemServicoCommand command) {
-
-        OrdemServico os = buscarPorId(id);
+    public OrdemServico atualizar(Long id, Long usuarioId, AtualizarOrdemServicoCommand command) {
+        OrdemServico os = buscarDoUsuario(id, usuarioId);
 
         if (os.getStatus() == StatusOrdemServico.FINALIZADA) {
             throw new BusinessException("Não é permitido editar uma OS FINALIZADA.");
@@ -67,22 +66,22 @@ public class GerenciarOrdemServicoUseCase {
     }
 
     @Transactional
-    public void excluir(Long id) {
-        OrdemServico os = buscarPorId(id);
+    public void excluir(Long id, Long usuarioId) {
+        OrdemServico os = buscarDoUsuario(id, usuarioId);
 
         if (os.getStatus() == StatusOrdemServico.EM_EXECUCAO) {
-            throw new BusinessException("Não é permitido excluir OS em execução.");
+            throw new BusinessException("Não é permitido excluir OS EM_EXECUCAO.");
         }
 
         ordemRepository.excluir(os);
     }
 
     @Transactional
-    public OrdemServico iniciarServico(Long id) {
-        OrdemServico os = buscarPorId(id);
+    public OrdemServico iniciarServico(Long id, Long usuarioId) {
+        OrdemServico os = buscarDoUsuario(id, usuarioId);
 
         if (os.getStatus() != StatusOrdemServico.ABERTA) {
-            throw new BusinessException("Só é possível iniciar uma OS que está ABERTA.");
+            throw new BusinessException("Só é possível iniciar uma OS ABERTA.");
         }
 
         os.setStatus(StatusOrdemServico.EM_EXECUCAO);
@@ -90,14 +89,16 @@ public class GerenciarOrdemServicoUseCase {
     }
 
     @Transactional
-    public OrdemServico finalizar(Long id) {
-        OrdemServico os = buscarPorId(id);
+    public OrdemServico finalizar(Long id, Long usuarioId) {
+        OrdemServico os = buscarDoUsuario(id, usuarioId);
 
         if (os.getStatus() != StatusOrdemServico.EM_EXECUCAO) {
-            throw new BusinessException("Só é possível finalizar uma OS que está EM_EXECUCAO.");
+            throw new BusinessException("Só é possível finalizar uma OS EM_EXECUCAO.");
         }
 
         os.setStatus(StatusOrdemServico.FINALIZADA);
         return ordemRepository.salvar(os);
     }
+
+
 }

@@ -5,21 +5,52 @@ import LoginPage from "./pages/LoginPage";
 import OrdensList from "./pages/OrdensList";
 import OrdemForm from "./pages/OrdemForm";
 
-
-
+import PrivateRoute from "./routes/PrivateRoute";
 
 export default function App() { 
   return (
     <div className="app-shell">
       <Header />
+
       <Routes>
+        {/* Redireciona raiz para login */}
         <Route path="/" element={<Navigate to="/login" replace />} />
+
+        {/* Login é público */}
         <Route path="/login" element={<LoginPage />} />
+
+        {/* Rotas protegidas (exige autenticação) */}
+        <Route 
+          path="/ordens" 
+          element={
+            <PrivateRoute>
+              <OrdensList />
+            </PrivateRoute>
+          } 
+        />
+
+        <Route 
+          path="/ordens/novo" 
+          element={
+            <PrivateRoute>
+              <OrdemForm />
+            </PrivateRoute>
+          } 
+        />
+
+        <Route 
+          path="/ordens/:id/editar" 
+          element={
+            <PrivateRoute>
+              <OrdemForm />
+            </PrivateRoute>
+          } 
+        />
+
+        {/* Qualquer rota inválida manda para login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
-        <Route path="/ordens" element={<OrdensList />} />
-        <Route path="/ordens/novo" element={<OrdemForm />} />
-        <Route path="/ordens/:id/editar" element={<OrdemForm />} />
       </Routes>
+
       <Footer />
     </div>
   );

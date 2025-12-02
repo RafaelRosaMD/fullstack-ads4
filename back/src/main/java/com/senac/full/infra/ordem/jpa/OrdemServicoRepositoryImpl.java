@@ -36,6 +36,19 @@ public class OrdemServicoRepositoryImpl implements OrdemServicoRepository {
     }
 
     @Override
+    public List<OrdemServico> listarPorUsuario(Long usuarioId) {
+        return jpaRepo.findByUsuario_Id(usuarioId).stream()
+                .map(OrdemServicoEntity::toDomain)
+                .toList();
+    }
+
+    @Override
+    public Optional<OrdemServico> buscarPorIdEUsuario(Long id, Long usuarioId) {
+        return jpaRepo.findByIdAndUsuario_Id(id, usuarioId)
+                .map(OrdemServicoEntity::toDomain);
+    }
+
+    @Override
     public void excluir(OrdemServico ordem) {
         jpaRepo.deleteById(ordem.getId());
     }
