@@ -2,7 +2,7 @@ package com.senac.full.application.usuario;
 
 import com.senac.full.domain.usuario.Usuario;
 import com.senac.full.domain.usuario.UsuarioRepository;
-import com.senac.full.exception.BusinessException;
+import com.senac.full.application.exception.BusinessException;
 import org.springframework.stereotype.Service;
 
 @Service

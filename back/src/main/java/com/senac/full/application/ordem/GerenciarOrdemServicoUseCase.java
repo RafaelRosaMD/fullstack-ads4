@@ -6,8 +6,8 @@ import com.senac.full.domain.ordem.OrdemServico;
 import com.senac.full.domain.ordem.OrdemServicoRepository;
 import com.senac.full.domain.ordem.StatusOrdemServico;
 import com.senac.full.domain.usuario.UsuarioRepository;
-import com.senac.full.exception.BusinessException;
-import com.senac.full.exception.NotFoundException;
+import com.senac.full.application.exception.BusinessException;
+import com.senac.full.application.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

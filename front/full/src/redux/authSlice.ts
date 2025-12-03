@@ -36,15 +36,11 @@ const authSlice = createSlice({
       state.isAutenticado = false;
       state.token = null;
       state.usuario = null;
-      // limpar storage
-      localStorage.removeItem("token");
-      localStorage.removeItem("usuarioId");
+      // ❌ NÃO mexe mais com token no localStorage aqui
+      // se quiser limpar coisas não sensíveis, tudo bem
     },
   },
 });
 
-// 🔴 ISSO AQUI É O QUE PRECISA EXISTIR
 export const { loginSucesso, logout } = authSlice.actions;
-
-// reducer padrão
 export default authSlice.reducer;

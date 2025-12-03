@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState, AppDispatch } from "../redux/store";
 import { 
   listarOrdens, 
   excluirOrdem, 
@@ -7,6 +9,7 @@ import {
   finalizarServico 
 } from "../services/ordens";
 import type { OrdemServico } from "../types";
+import { setFiltroStatus, type StatusFiltro } from "../redux/ordensUiSlice";
 
 function BadgeStatus({ status }: { status: OrdemServico["status"] }) {
   const map: Record<OrdemServico["status"], string> = {
@@ -23,6 +26,17 @@ export default function OrdensList() {
   const [erro, setErro] = useState<string | null>(null);
   const [operandoId, setOperandoId] = useState<number | null>(null);
 
+  // 🔹 Redux: filtro global de status
+  const dispatch = useDispatch<AppDispatch>();
+  const filtroStatus = useSelector(
+    (state: RootState) => state.ordensUi.filtroStatus
+  );
+
+  // Aplica o filtro vindo do Redux
+  const ordensFiltradas = dados.filter((o) =>
+    filtroStatus === "TODAS" ? true : o.status === filtroStatus
+  );
+
   async function carregar() {
     try {
       setLoading(true);
@@ -36,7 +50,9 @@ export default function OrdensList() {
     }
   }
 
-  useEffect(() => { carregar(); }, []);
+  useEffect(() => {
+    carregar();
+  }, []);
 
   async function handleExcluir(id: number) {
     if (!confirm("Excluir esta ordem?")) return;
@@ -80,14 +96,33 @@ export default function OrdensList() {
       <div className="container py-4">
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h1 className="h4 m-0">Ordens de Serviço</h1>
-          <Link className="btn btn-dark" to="/ordens/novo">Nova OS</Link>
+          <Link className="btn btn-dark" to="/ordens/novo">
+            Nova OS
+          </Link>
+        </div>
+
+        {/* 🔹 Filtro global de status controlado pelo Redux */}
+        <div className="mb-3">
+          <label className="form-label">Filtrar por status</label>
+          <select
+            className="form-select"
+            value={filtroStatus}
+            onChange={(e) =>
+              dispatch(setFiltroStatus(e.target.value as StatusFiltro))
+            }
+          >
+            <option value="TODAS">Todas</option>
+            <option value="ABERTA">Abertas</option>
+            <option value="EM_EXECUCAO">Em execução</option>
+            <option value="FINALIZADA">Finalizadas</option>
+          </select>
         </div>
 
         {erro && <div className="alert alert-danger">{erro}</div>}
         {loading ? (
           <div className="text-muted">Carregando...</div>
-        ) : dados.length === 0 ? (
-          <div className="text-muted">Nenhuma OS cadastrada.</div>
+        ) : ordensFiltradas.length === 0 ? (
+          <div className="text-muted">Nenhuma OS encontrada para o filtro atual.</div>
         ) : (
           <div className="table-responsive">
             <table className="table align-middle">
@@ -101,36 +136,47 @@ export default function OrdensList() {
                 </tr>
               </thead>
               <tbody>
-                {dados.map((o) => (
+                {ordensFiltradas.map((o) => (
                   <tr key={o.id}>
                     <td>{o.id}</td>
                     <td>{o.cliente}</td>
                     <td className="text-muted">{o.descricaoDefeito}</td>
-                    <td><BadgeStatus status={o.status} /></td>
+                    <td>
+                      <BadgeStatus status={o.status} />
+                    </td>
                     <td className="text-end">
                       <div className="btn-group">
-                        <Link className="btn btn-outline-secondary btn-sm" to={`/ordens/${o.id}/editar`}>
+                        <Link
+                          className="btn btn-outline-secondary btn-sm"
+                          to={`/ordens/${o.id}/editar`}
+                        >
                           Editar
                         </Link>
 
                         {o.status === "ABERTA" && (
-                          <button className="btn btn-outline-primary btn-sm"
+                          <button
+                            className="btn btn-outline-primary btn-sm"
                             onClick={() => handleIniciar(o.id)}
-                            disabled={operandoId === o.id}>
+                            disabled={operandoId === o.id}
+                          >
                             Iniciar
                           </button>
                         )}
                         {o.status === "EM_EXECUCAO" && (
-                          <button className="btn btn-outline-success btn-sm"
+                          <button
+                            className="btn btn-outline-success btn-sm"
                             onClick={() => handleFinalizar(o.id)}
-                            disabled={operandoId === o.id}>
+                            disabled={operandoId === o.id}
+                          >
                             Finalizar
                           </button>
                         )}
 
-                        <button className="btn btn-outline-danger btn-sm"
+                        <button
+                          className="btn btn-outline-danger btn-sm"
                           onClick={() => handleExcluir(o.id)}
-                          disabled={operandoId === o.id}>
+                          disabled={operandoId === o.id}
+                        >
                           Excluir
                         </button>
                       </div>

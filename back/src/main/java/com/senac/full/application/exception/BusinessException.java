@@ -1,5 +1,5 @@
 
-package com.senac.full.exception;
+package com.senac.full.application.exception;
 
 public class BusinessException extends RuntimeException {
     public BusinessException(String message) {
