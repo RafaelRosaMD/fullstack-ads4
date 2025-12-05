@@ -13,13 +13,10 @@ export default function App() {
       <Header />
 
       <Routes>
-        {/* Redireciona raiz para login */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
-        {/* Login é público */}
         <Route path="/login" element={<LoginPage />} />
 
-        {/* Rotas protegidas (exige autenticação) */}
         <Route 
           path="/ordens" 
           element={
@@ -47,7 +44,6 @@ export default function App() {
           } 
         />
 
-        {/* Qualquer rota inválida manda para login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
 

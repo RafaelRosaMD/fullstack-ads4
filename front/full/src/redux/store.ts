@@ -5,7 +5,7 @@ import ordensUiReducer from "./ordensUiSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    ordensUi: ordensUiReducer, // 👈 nova funcionalidade global
+    ordensUi: ordensUiReducer,
   },
 });
 

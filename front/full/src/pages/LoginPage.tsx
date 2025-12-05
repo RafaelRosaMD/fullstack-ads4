@@ -1,4 +1,3 @@
-// src/pages/LoginPage.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -21,11 +20,8 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // chama a API (usa api.ts)
       const data = await login({ email, senha });
-      // data: { token, id, nome, email, role }
-
-      // atualiza Redux
+      
       dispatch(
         loginSucesso({
           token: data.token,
@@ -37,8 +33,6 @@ export default function LoginPage() {
         })
       );
 
-      // token e usuarioId já foram salvos no localStorage dentro do login()
-      // via api.ts
 
       navigate("/ordens");
     } catch (err: any) {

@@ -1,4 +1,3 @@
-// src/services/api.ts
 import axios from "axios";
 import { store } from "../redux/store";
 import { logout } from "../redux/authSlice";
@@ -8,11 +7,10 @@ const api = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-// ---------- INTERCEPTOR DE REQUISIÇÃO ----------
-// Token vem EXCLUSIVAMENTE da store do Redux
+
 api.interceptors.request.use((config) => {
   const state = store.getState();
-  const token = state.auth.token; // 👈 pega da Redux store
+  const token = state.auth.token; 
 
   if (token) {
     config.headers = config.headers ?? {};
@@ -22,21 +20,17 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// ---------- INTERCEPTOR DE RESPOSTA ----------
-// Se der 401 -> faz logout no Redux
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       store.dispatch(logout());
-      // opcional: redirecionar pra login (se quiser algo extra visual)
-      // window.location.href = "/login";
     }
     return Promise.reject(error);
   }
 );
 
-// ----------------- LOGIN -----------------
 export type LoginPayload = { email: string; senha: string };
 
 export type LoginResponse = {
@@ -56,9 +50,6 @@ export async function login({
   if (!data?.token) {
     throw new Error("Resposta inválida do servidor (sem token).");
   }
-
-  // ❌ NÃO mexe com localStorage aqui.
-  // Quem guarda token + usuário é o Redux (na LoginPage).
 
   return data;
 }

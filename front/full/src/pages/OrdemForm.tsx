@@ -1,11 +1,10 @@
-// src/pages/OrdemForm.tsx
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { buscarOrdem, criarOrdem, atualizarOrdem } from "../services/ordens";
 import type { OrdemCreate, OrdemUpdate } from "../types";
 
 export default function OrdemForm() {
-  const { id } = useParams();               // string | undefined
+  const { id } = useParams();              
   const editMode = Boolean(id);
   const navigate = useNavigate();
 
@@ -18,12 +17,11 @@ export default function OrdemForm() {
   const [form, setForm] = useState<FormState>({
     cliente: "",
     descricaoDefeito: "",
-    usuarioId: null, // vamos preencher assim que carregar
+    usuarioId: null, 
   });
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
-  // ===================== carrega usuarioId do localStorage =====================
   useEffect(() => {
     const raw = localStorage.getItem("usuarioId");
     const parsed = raw ? Number(raw) : NaN;
@@ -36,7 +34,6 @@ export default function OrdemForm() {
 
     setForm(prev => ({ ...prev, usuarioId: parsed }));
   }, []);
-  // ============================================================================
 
   useEffect(() => {
     async function carregar() {
@@ -48,8 +45,6 @@ export default function OrdemForm() {
           ...prev,
           cliente: os.cliente,
           descricaoDefeito: os.descricaoDefeito,
-          // se o backend devolver usuarioId e você quiser sincronizar:
-          // usuarioId: os.usuarioId ?? prev.usuarioId,
         }));
       } catch (err: any) {
         setErro(err?.response?.data?.message || "Falha ao carregar OS.");

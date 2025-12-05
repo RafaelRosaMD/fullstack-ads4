@@ -1,11 +1,10 @@
-// src/routes/PrivateRoute.tsx
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
 
 interface Props {
-  children: React.ReactNode; // 👈 em vez de JSX.Element
+  children: React.ReactNode;
 }
 
 export default function PrivateRoute({ children }: Props) {

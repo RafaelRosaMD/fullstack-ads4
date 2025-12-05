@@ -1,4 +1,3 @@
-// src/redux/ordensUiSlice.ts
 import { createSlice } from "@reduxjs/toolkit";
 
 export type StatusFiltro = "TODAS" | "ABERTA" | "EM_EXECUCAO" | "FINALIZADA";

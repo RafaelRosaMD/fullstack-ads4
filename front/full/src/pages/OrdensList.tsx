@@ -26,13 +26,11 @@ export default function OrdensList() {
   const [erro, setErro] = useState<string | null>(null);
   const [operandoId, setOperandoId] = useState<number | null>(null);
 
-  // 🔹 Redux: filtro global de status
   const dispatch = useDispatch<AppDispatch>();
   const filtroStatus = useSelector(
     (state: RootState) => state.ordensUi.filtroStatus
   );
 
-  // Aplica o filtro vindo do Redux
   const ordensFiltradas = dados.filter((o) =>
     filtroStatus === "TODAS" ? true : o.status === filtroStatus
   );
@@ -101,7 +99,7 @@ export default function OrdensList() {
           </Link>
         </div>
 
-        {/* 🔹 Filtro global de status controlado pelo Redux */}
+        {}
         <div className="mb-3">
           <label className="form-label">Filtrar por status</label>
           <select

@@ -10,11 +10,11 @@ export interface OrdemServico {
 export type OrdemCreate = {
   cliente: string;
   descricaoDefeito: string;
-  usuarioId: number;   // <- NOVO
+  usuarioId: number;   
 }
 
 export type OrdemUpdate = {
   cliente: string;
   descricaoDefeito: string;
-  usuarioId: number;   // <- se o backend também exige no update, deixa aqui
+  usuarioId: number;   
 }
