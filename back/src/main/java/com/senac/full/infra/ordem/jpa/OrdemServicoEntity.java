@@ -24,7 +24,7 @@ public class OrdemServicoEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
-    private UsuarioEntity usuario;   // <-- ManyToOne aqui
+    private UsuarioEntity usuario;
 
     public OrdemServicoEntity() {
     }

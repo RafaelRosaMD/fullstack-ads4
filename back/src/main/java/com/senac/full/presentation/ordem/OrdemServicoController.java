@@ -34,7 +34,7 @@ public class OrdemServicoController {
         var command = new CriarOrdemServicoCommand(
                 request.cliente(),
                 request.descricaoDefeito(),
-                usuarioAutenticado.getId()       // 👈 AQUI: SEMPRE o usuário logado
+                usuarioAutenticado.getId()
         );
 
         var os = useCase.criar(command);

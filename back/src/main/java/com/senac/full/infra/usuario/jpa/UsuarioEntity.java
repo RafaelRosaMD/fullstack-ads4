@@ -32,7 +32,6 @@ public class UsuarioEntity implements UserDetails {
 
     private String role;
 
-    // ====== MAPEAMENTO DOMAIN <-> ENTITY ======
 
     public static UsuarioEntity fromDomain(Usuario usuario) {
         return new UsuarioEntity(
@@ -56,7 +55,6 @@ public class UsuarioEntity implements UserDetails {
         );
     }
 
-    // ====== UserDetails ======
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -82,7 +80,7 @@ public class UsuarioEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true; // igual ao seu código, poderia usar default do UserDetails.super
+        return true;
     }
 
     @Override

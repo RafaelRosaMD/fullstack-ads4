@@ -31,7 +31,7 @@ public class GerenciarUsuarioUseCase {
                 command.nome(),
                 command.cpf(),
                 command.email(),
-                command.senha(), // se tiver criptografia, faça antes de criar o command
+                command.senha(),
                 command.role()
         );
 

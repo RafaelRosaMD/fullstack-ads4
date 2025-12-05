@@ -8,9 +8,7 @@ import java.util.Optional;
 public interface SpringDataOrdemServicoRepository
         extends JpaRepository<OrdemServicoEntity, Long> {
 
-    // Todas as OS de um usuário
     List<OrdemServicoEntity> findByUsuario_Id(Long usuarioId);
 
-    // OS específica de um usuário
     Optional<OrdemServicoEntity> findByIdAndUsuario_Id(Long id, Long usuarioId);
 }
