@@ -3,10 +3,12 @@ package com.senac.full.presentation.ordem;
 import com.senac.full.application.ordem.GerenciarOrdemServicoUseCase;
 import com.senac.full.application.ordem.command.AtualizarOrdemServicoCommand;
 import com.senac.full.application.ordem.command.CriarOrdemServicoCommand;
+import com.senac.full.infra.usuario.jpa.UsuarioEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -23,66 +25,85 @@ public class OrdemServicoController {
         this.useCase = useCase;
     }
 
-    // CRUD
     @PostMapping
-    @Operation(summary = "Criar OS (status inicial = ABERTA)")
-    public ResponseEntity<OrdemServicoResponse> criar(@RequestBody @Valid OrdemServicoCreateRequest request) {
+    @Operation(summary = "Criar OS")
+    public ResponseEntity<OrdemServicoResponse> criar(
+            @AuthenticationPrincipal UsuarioEntity usuarioAutenticado,
+            @RequestBody @Valid OrdemServicoCreateRequest request) {
+
         var command = new CriarOrdemServicoCommand(
                 request.cliente(),
                 request.descricaoDefeito(),
-                request.usuarioId()
+                usuarioAutenticado.getId()
         );
+
         var os = useCase.criar(command);
         var resp = OrdemServicoResponse.fromDomain(os);
         return ResponseEntity.created(URI.create("/ordens/" + resp.id())).body(resp);
     }
 
     @GetMapping
-    @Operation(summary = "Listar todas as OS")
-    public List<OrdemServicoResponse> listar() {
-        return useCase.listar().stream()
+    @Operation(summary = "Listar OS do usuário autenticado")
+    public List<OrdemServicoResponse> listar(
+            @AuthenticationPrincipal UsuarioEntity usuarioAutenticado) {
+
+        return useCase.listarDoUsuario(usuarioAutenticado.getId()).stream()
                 .map(OrdemServicoResponse::fromDomain)
                 .toList();
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Buscar OS por id")
-    public OrdemServicoResponse buscar(@PathVariable Long id) {
-        var os = useCase.buscarPorId(id);
+    @Operation(summary = "Buscar OS do usuário por id")
+    public OrdemServicoResponse buscar(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UsuarioEntity usuarioAutenticado) {
+
+        var os = useCase.buscarDoUsuario(id, usuarioAutenticado.getId());
         return OrdemServicoResponse.fromDomain(os);
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "Atualizar OS (não permite quando FINALIZADA)")
-    public OrdemServicoResponse atualizar(@PathVariable Long id,
-                                          @RequestBody @Valid OrdemServicoUpdateRequest request) {
+    @Operation(summary = "Atualizar OS do usuário")
+    public OrdemServicoResponse atualizar(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UsuarioEntity usuarioAutenticado,
+            @RequestBody @Valid OrdemServicoUpdateRequest request) {
+
         var command = new AtualizarOrdemServicoCommand(
                 request.cliente(),
                 request.descricaoDefeito()
         );
-        var os = useCase.atualizar(id, command);
+        var os = useCase.atualizar(id, usuarioAutenticado.getId(), command);
         return OrdemServicoResponse.fromDomain(os);
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Excluir OS (bloqueia quando EM_EXECUCAO)")
-    public ResponseEntity<Void> excluir(@PathVariable Long id) {
-        useCase.excluir(id);
+    @Operation(summary = "Excluir OS do usuário")
+    public ResponseEntity<Void> excluir(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UsuarioEntity usuarioAutenticado) {
+
+        useCase.excluir(id, usuarioAutenticado.getId());
         return ResponseEntity.noContent().build();
     }
 
-    // AÇÕES
     @PostMapping("/{id}/iniciar")
-    @Operation(summary = "Iniciar serviço (ABERTA → EM_EXECUCAO)")
-    public OrdemServicoResponse iniciar(@PathVariable Long id) {
-        var os = useCase.iniciarServico(id);
+    @Operation(summary = "Iniciar serviço em OS do usuário")
+    public OrdemServicoResponse iniciar(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UsuarioEntity usuarioAutenticado) {
+
+        var os = useCase.iniciarServico(id, usuarioAutenticado.getId());
         return OrdemServicoResponse.fromDomain(os);
     }
 
     @PostMapping("/{id}/finalizar")
-    @Operation(summary = "Finalizar serviço (EM_EXECUCAO → FINALIZADA)")
-    public OrdemServicoResponse finalizar(@PathVariable Long id) {
-        var os = useCase.finalizar(id);
+    @Operation(summary = "Finalizar OS do usuário")
+    public OrdemServicoResponse finalizar(
+            @PathVariable Long id,
+            @AuthenticationPrincipal UsuarioEntity usuarioAutenticado) {
+
+        var os = useCase.finalizar(id, usuarioAutenticado.getId());
         return OrdemServicoResponse.fromDomain(os);
     }
 }

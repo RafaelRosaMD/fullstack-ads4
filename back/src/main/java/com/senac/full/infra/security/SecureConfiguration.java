@@ -34,61 +34,45 @@ public class SecureConfiguration {
                                                    JwtFilter jwtFilter) throws Exception {
 
         http
-                // Habilita CORS usando o bean corsConfigurationSource()
                 .cors(cors -> {})
-                // Em API stateless com JWT, normalmente desabilita CSRF
                 .csrf(csrf -> csrf.disable())
-                // Sem sessão de servidor, tudo via token
                 .sessionManagement(sm ->
                         sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        // Libera TODOS os preflights (OPTIONS)
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                        // Libera o login (seu endpoint de autenticação)
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-
-                        // (Opcional) Libera Swagger/OpenAPI se você estiver usando
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
-
-                        // Todo o resto precisa de token válido
                         .anyRequest().authenticated()
                 )
-                // Coloca o filtro JWT antes do filtro padrão de usuário/senha
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    // Configuração de CORS para o frontend em Vite/React
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // Origens permitidas (ajuste se mudar a porta do Vite)
         config.setAllowedOriginPatterns(List.of(
                 "http://localhost:5173",
                 "http://127.0.0.1:5173"
         ));
 
-        // Métodos HTTP permitidos
         config.setAllowedMethods(List.of(
                 "GET", "POST", "PUT", "DELETE", "OPTIONS"
         ));
 
-        // Headers que o frontend pode enviar
         config.setAllowedHeaders(List.of(
                 "Authorization",
                 "Content-Type",
                 "Accept"
         ));
 
-        // Permitir cookies/Authorization
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

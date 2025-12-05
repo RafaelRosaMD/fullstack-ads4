@@ -22,7 +22,6 @@ public class Usuario {
         return new Usuario(null, nome, cpf, email, senha, role);
     }
 
-    // getters (e setters se você quiser mutabilidade)
     public Long getId() { return id; }
 
     public String getNome() { return nome; }

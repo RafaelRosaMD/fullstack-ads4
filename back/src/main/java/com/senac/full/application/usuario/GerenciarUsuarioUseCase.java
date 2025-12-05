@@ -4,8 +4,8 @@ import com.senac.full.application.usuario.command.AtualizarUsuarioCommand;
 import com.senac.full.application.usuario.command.CriarUsuarioCommand;
 import com.senac.full.domain.usuario.Usuario;
 import com.senac.full.domain.usuario.UsuarioRepository;
-import com.senac.full.exception.BusinessException;
-import com.senac.full.exception.NotFoundException;
+import com.senac.full.application.exception.BusinessException;
+import com.senac.full.application.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,7 +31,7 @@ public class GerenciarUsuarioUseCase {
                 command.nome(),
                 command.cpf(),
                 command.email(),
-                command.senha(), // se tiver criptografia, faça antes de criar o command
+                command.senha(),
                 command.role()
         );
 

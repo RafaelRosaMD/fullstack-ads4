@@ -23,16 +23,13 @@ public class AuthController {
     public ResponseEntity<TokenResponseDto> login(
             @RequestBody @Valid LoginRequestDto request) {
 
-        // 1. Autentica o usuário — JÁ retorna a entidade correta do domínio
         var usuario = autenticarUsuarioUseCase.autenticar(
                 request.email(),
                 request.senha()
         );
 
-        // 2. Gera o JWT
         String token = jwtService.generateToken(usuario);
 
-        // 3. Monta o DTO com token + informações do usuário
         var response = new TokenResponseDto(
                 token,
                 usuario.getId(),
@@ -41,7 +38,6 @@ public class AuthController {
                 usuario.getRole() // se for enum
         );
 
-        // 4. Devolve pro frontend
         return ResponseEntity.ok(response);
     }
 }
