@@ -33,9 +33,14 @@ jobs:
         working-directory: .
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
+          printf '%s' "${{ secrets.SERVER_SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -p 22 -H 178.104.64.56 >> ~/.ssh/known_hosts
+
+      - name: Testar leitura da chave
+        working-directory: .
+        run: |
+          ssh-keygen -y -f ~/.ssh/id_ed25519 > /dev/null
 
       - name: Enviar jar para o servidor
         working-directory: .
