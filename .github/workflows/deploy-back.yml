@@ -35,19 +35,19 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -p ${{ secrets.SERVER_PORT }} -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
-
+          ssh-keyscan -p 22 -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+      
       - name: Enviar jar para o servidor
         working-directory: .
         run: |
           JAR_FILE=$(find back/target -maxdepth 1 -name "*.jar" ! -name "*.jar.original" | head -n 1)
           echo "Enviando: $JAR_FILE"
-          scp -P ${{ secrets.SERVER_PORT }} "$JAR_FILE" ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/app-teste.jar
+          scp -P 22 "$JAR_FILE" ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/app-teste.jar
 
       - name: Subir aplicação no servidor
         working-directory: .
         run: |
-          ssh -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
+          ssh -p 22 ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "
             pkill -f '/opt/app-teste.jar' || true
             nohup java -jar /opt/app-teste.jar > /opt/app-teste.log 2>&1 &
           "
